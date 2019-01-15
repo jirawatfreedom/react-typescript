@@ -3,15 +3,22 @@ import logo from './logo.svg';
 import './App.css';
 import {  Input } from "antd";
 import "antd/dist/antd.css"
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch, ActionCreatorsMapObject} from "redux";
 import * as serviceWorker from "./serviceWorker";
+import {addToDoList} from './actions/toDo';
+import ToDoList from "./components/ToDoList";
 
 
 interface State {
     toDo: String;
-    toDoList?: Array<String>;
-};
+   
+}
+interface Props {
+  addToDoList?: any;
+}
 const Search =  Input.Search;
-class App extends React.Component<{}, State> {
+class App extends React.Component<Props, State> {
   state = {
     toDo: ""
   };
@@ -23,13 +30,21 @@ class App extends React.Component<{}, State> {
           <h1>ToDo List</h1>
           <Search
             placeholder="To Do"
-            onSearch={value => console.log(value)}
+            onSearch={value => this.props.addToDoList(value)}
             style={{ width:200 }}
           />
+          <ToDoList />
         </header>
       </div>
     );
   }
 }
-
-export default App;
+const mapDispatchToProps = (dispatch: Dispatch): ActionCreatorsMapObject => {
+  return bindActionCreators(
+    {
+      addToDoList: addToDoList
+    },
+    dispatch
+  );
+}
+export default connect(null, mapDispatchToProps)(App);
